@@ -36,6 +36,9 @@ let config = {
           {
             resolve: `gatsby-remark-images`,
             options: {
+              maxWidth: 650,
+              loading: "lazy", // garde le lazy loading natif du navigateur
+              disableBgImage: true,
               showCaptions: ["alt", "title"],
               // markdownCaptions: true,
               // maxWidth: 650

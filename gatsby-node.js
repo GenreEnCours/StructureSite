@@ -57,11 +57,12 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     let images = []
     if(node.frontmatter.image){
       images = [path.join(path.dirname(node.fileAbsolutePath), node.frontmatter.image)]
-      console.log(images)
     }
     else{
       const files = fs.readdirSync(path.dirname(node.fileAbsolutePath)).filter(el => el !== 'index.md')
-      images = files.filter(el => el.endsWith('.png') || el.endsWith('.jpeg') || el.endsWith('.jpg') || el.endsWith('.webp'))
+      images = files
+      .filter(el => el.endsWith('.png') || el.endsWith('.jpeg') || el.endsWith('.jpg') || el.endsWith('.webp'))
+      .map(el => path.join(path.dirname(node.fileAbsolutePath), el))
     }
     // const sounds = files.filter(el => el.endsWith('.mp3') || el.endsWith('.wav') || el.endsWith('.ogg'))
     
@@ -176,6 +177,7 @@ exports.createSchemaCustomization = ({ actions }) => {
       date: Date @dateformat
       collection: String
       prettyName: String
+      image: File @link(by: "absolutePath")
     }
     type Frontmatter {
       tags: [String!]

@@ -22,9 +22,9 @@ main>header {
     position: absolute;
     max-height: 110px; 
     height: auto; 
-    left: 2.6rem; 
-    top: 2.8rem; 
-    z-index: 3; 
+    left: 3rem; 
+    align-self: center;
+    z-index: 3;
 }
 
 #landing-sorbonne {
@@ -65,9 +65,11 @@ h1#landing-title {
   max-height: 200px; /* Correspond à l'image et au logo */
   overflow: hidden; /* Empêche le dépassement du logo et du dégradé */
   background-color: rgb(242, 143, 90);
-  display: block;
-  text-align: center;
-  align-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2rem;
 }
 
 .image-container h1{
@@ -231,4 +233,10 @@ abbr {
     display: block;
     max-width: var(--max-cards-width);
     margin: 3rem max(calc((100vw - var(--max-cards-width)) / 2 - 2rem), var(--min-margin)) 1.5rem max(calc((100vw - var(--max-cards-width)) / 2 - 2rem), var(--min-margin));
+}
+
+@media screen and (max-width: 640px) {
+    .landing-header {
+        display: none;
+    }
 }

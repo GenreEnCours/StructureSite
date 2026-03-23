@@ -69,7 +69,7 @@ const HomeHeader = ({ nodes }) => {
         setTimeout(() => setImageClass('full'), 0)
     }, [])
 
-    return (<header>
+    return (<header className="landing-header">
         <div className="image-container">
             {/* <img id="landing-image" src={Planet} style={{ maxWidth: "100%", margin: 0 }} className={imageClass} /> */}
             {/* <div class="gradient-overlay"></div> */}

@@ -30,7 +30,7 @@
     margin-left: calc(0rem - var(--card-padding) - var(--border-width));
     margin-top: calc(0rem - var(--border-width));
     margin-bottom: var(--in-card-margin);
-    height: 11rem;
+    max-height: 11rem;
     position: relative;
     overflow: hidden;
 }

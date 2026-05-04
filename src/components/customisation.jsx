@@ -28,9 +28,9 @@ export const Footer = () => (
   <footer id="footer">
     <div className="footer-block">
       <p>
-        Genre en Cours est une initiative portée par l'initiative{" "}
-        <a href="https://philomel.hypotheses.org/">Philomel</a> de la Faculté
-        des Lettres de Sorbonne Université et accompagnée par le{" "}
+        Genre en Cours est une initiative portée par le réseau {" "}
+        <a href="https://philomel.hypotheses.org/">Philomel</a> de l'Alliance
+        Sorbonne Université et accompagnée par le{" "}
         <a href="https://ceres.sorbonne-universite.fr/">CERES</a>.
       </p>
     </div>

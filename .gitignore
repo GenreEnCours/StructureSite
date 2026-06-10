@@ -3,3 +3,4 @@ node_modules/
 public
 src/data/
 package-lock_save.json
+*.local.md

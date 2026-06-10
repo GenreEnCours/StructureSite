@@ -132,7 +132,7 @@ export const query = graphql`
     }
     markdownRemark(fields: { slug: { eq: $slug } }) {
       id
-      excerpt(pruneLength: 160)
+      excerpt(pruneLength: 200)
       html
       frontmatter {
         author
@@ -147,10 +147,63 @@ export const query = graphql`
         date(formatString: "DD MMMM, YYYY", locale: "fr")
         slug
         collection
+        image {
+          publicURL
+          childImageSharp {
+            resize(width: 1200, height: 630, fit: COVER) {
+              src
+            }
+          }
+        }
       }
       tableOfContents
     }
   }
 `;
+
+// Supprime le HTML éventuel (ex: <i>, <sup>) des titres/résumés pour les balises meta
+const stripHtml = (str) => (str ? str.replace(/<[^>]*>/g, "").trim() : "");
+
+// Génère les métadonnées Open Graph / Twitter pour les aperçus sur les réseaux sociaux
+export const Head = ({ data, location }) => {
+  const { siteUrl, title: siteName } = data.site.siteMetadata;
+  const { frontmatter, fields, excerpt } = data.markdownRemark;
+
+  const title = stripHtml(frontmatter.title);
+  const description = stripHtml(frontmatter.abstract) || excerpt;
+  const url = `${siteUrl}${location.pathname}`;
+
+  // Chemin de l'image redimensionnée (1200x630, format recommandé) ou image brute
+  const imagePath = fields.image?.childImageSharp?.resize?.src ?? fields.image?.publicURL;
+  const imageUrl = imagePath ? `${siteUrl}${imagePath}` : null;
+
+  return (
+    <>
+      <title>{`${title} | ${siteName}`}</title>
+      <meta name="description" content={description} />
+      <link rel="canonical" href={url} />
+
+      {/* Open Graph (Facebook, LinkedIn, WhatsApp, Mastodon…) */}
+      <meta property="og:type" content="article" />
+      <meta property="og:site_name" content={siteName} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={url} />
+      {imageUrl && <meta property="og:image" content={imageUrl} />}
+      {imageUrl && fields.image?.childImageSharp && (
+        <>
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+        </>
+      )}
+
+      {/* Twitter / X */}
+      <meta name="twitter:card" content={imageUrl ? "summary_large_image" : "summary"} />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      {imageUrl && <meta name="twitter:image" content={imageUrl} />}
+    </>
+  );
+};
 
 export default BlogPost;

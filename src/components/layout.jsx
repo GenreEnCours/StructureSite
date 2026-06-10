@@ -91,7 +91,7 @@ const Layout = ({ children, nodes }) => {
         <>
             <LeftNav allTags={[...allTags]} selectedTags={tags} toggleTag={toggleTag} search={search} setSearch={setSearch} open={open} setOpen={setOpen} />
             <div id="page-container">
-                <Header menu={menu} />
+                <Header menu={menu} open={open} setOpen={setOpen} />
                 <main>
                     {typeof children === "function" ? children(toggleTag, tags, search) : children}
                 </main>
@@ -102,9 +102,10 @@ const Layout = ({ children, nodes }) => {
     )
 }
 
-const Header = ({ menu }) => {
+const Header = ({ menu, open, setOpen }) => {
 
     const [mode, setMode] = React.useState('light')
+    const [menuOpen, setMenuOpen] = React.useState(false)
 
     const toggleMode = () => {
         let newMode = mode === 'dark' ? 'light' : 'dark'
@@ -134,13 +135,23 @@ const Header = ({ menu }) => {
 
     return (
         <header>
-            <nav id="header">
+            <nav id="header" className={menuOpen ? "open" : ""}>
                 <a className="header-link" id="header-logo" href="/">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-house-door-fill" viewBox="0 0 16 16" style={{verticalAlign: 'baseline'}}>
                         <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
                     </svg>
                 </a>
-                {menu.map((el, i) => !el.link ? <hr className="header-div-v" key={i} /> : <Link className="header-link" key={i} to={el.link}>{el.name}</Link>)}
+                <div id="header-mobile-controls">
+                    <button className="discrete-button" id="header-search" aria-label="Recherche" onClick={() => setOpen(!open)}>
+                        <div style={{ fontSize: '1.4rem', transform: 'rotate(50deg)' }}>{'⚲'}</div>
+                    </button>
+                    <button id="header-burger" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+                        {menuOpen
+                            ? <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                            : <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" /></svg>}
+                    </button>
+                </div>
+                {menu.map((el, i) => !el.link ? <hr className="header-div-v" key={i} /> : <Link className="header-link" key={i} to={el.link} onClick={() => setMenuOpen(false)}>{el.name}</Link>)}
                 <hr className="header-div-v" />
             </nav>
             <hr id="header-div-h" />
@@ -157,7 +168,7 @@ export const Tag = ({ tagName, selectedTags, toggleTag, nav = false }) =>
 
 const LeftNav = ({ allTags, open, setOpen, selectedTags, toggleTag, search, setSearch }) => {
     return (
-        <div id="tags-panel-container" style={{ left: open ? '0rem' : '-17rem', 'paddingRight': open ? '1rem' : '0.5rem' }}>
+        <div id="tags-panel-container" className={open ? "open" : ""} style={{ left: open ? '0rem' : '-17rem', 'paddingRight': open ? '1rem' : '0.5rem' }}>
             <nav id="tags-panel">
                 <div id="title-button-container">
                     <p style={{ visibility: open ? 'visible' : 'hidden' }}>

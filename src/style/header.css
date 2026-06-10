@@ -82,3 +82,56 @@ button.contact:hover:after {
     width: 17.5rem;
     visibility: visible;
 }
+
+/* Contrôles mobile (recherche + burger) : cachés sur grand écran */
+#header-mobile-controls {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#header-burger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: rgb(79, 65, 147);
+    line-height: 0;
+}
+
+#header-burger:hover {
+    color: rgb(43, 81, 76);
+}
+
+@media (max-width: 48rem),
+only screen and (hover: none) and (pointer: coarse) {
+    #header {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-top: 2rem;
+        padding-bottom: 1.2rem;
+    }
+
+    /* on neutralise le décalage négatif appliqué en grand écran */
+    #header * {
+        margin-top: 0;
+    }
+
+    #header-mobile-controls {
+        display: flex;
+    }
+
+    /* liens masqués par défaut ; le logo et les contrôles restent visibles */
+    #header .header-link:not(#header-logo),
+    #header .header-div-v {
+        display: none;
+    }
+
+    /* menu ouvert : les liens s'empilent sur toute la largeur */
+    #header.open .header-link:not(#header-logo) {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+}

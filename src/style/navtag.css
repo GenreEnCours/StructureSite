@@ -50,10 +50,17 @@
 
 /* Breakpoints */
 
-@media (max-width: 32rem),
+@media (max-width: 48rem),
 only screen and (hover: none) and (pointer: coarse) {
+    /* On ne masque plus complètement le panneau : il doit pouvoir s'ouvrir
+       via le bouton recherche du header. On masque juste l'onglet de 3rem
+       qui dépasse à gauche, l'icône de recherche étant déplacée dans le header. */
     #tags-panel-container {
-        display: none;
+        transform: translateX(-3rem);
+    }
+
+    #tags-panel-container.open {
+        transform: translateX(0);
     }
 
     #page-container {

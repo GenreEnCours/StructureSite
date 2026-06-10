@@ -6,7 +6,7 @@ import Markdown from "react-markdown";
 
 export const Card = ({ postData, toggleTag, selectedTags }) => {
   const { date, slug, image, collection, prettyName } = postData.fields;
-  const { title, tags, abstract, uuid } = postData.frontmatter;
+  const { title, tags, abstract, uuid, author } = postData.frontmatter;
   const content = abstract ? abstract : postData.excerpt;
 
   return (
@@ -27,10 +27,7 @@ export const Card = ({ postData, toggleTag, selectedTags }) => {
       )}
       <h4 dangerouslySetInnerHTML={{ __html: title }} />
       <div className="card-details">
-        <time dateTime={date}>{date}</time> •{" "}
-        <Link className="section-name" to={`/${collection}`}>
-          {collection}
-        </Link>
+        {author && author.join(", ")}
       </div>
       {tags && (
         <div className="small-tags-container">

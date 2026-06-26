@@ -66,7 +66,9 @@ const BlogPost = ({ data, children }) => {
             <h1 dangerouslySetInnerHTML={{ __html: title }} />
             {author && (
               <span id="article-meta">
-                Publié par{" "}
+                {tags && tags.includes("entretien")
+                  ? "Entretien avec "
+                  : "Publié par "}
                 {author.map((authorName, index) => (
                   <span key={index}>
                     <a href={`/${createSlug(authorName)}`}>{authorName}</a>

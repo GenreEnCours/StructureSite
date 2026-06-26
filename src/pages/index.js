@@ -25,25 +25,40 @@ const ROTATING_WORDS =
 const ADDITIONAL = HOME.additional || ""
 
 
+// Nombre d'articles affichés par palier (et chargés à chaque clic sur "Charger plus")
+const ARTICLES_PAR_PAGE = 24
+
 const Home = ({ data }) => {
     const nodes = data.allMarkdownRemark.nodes
     const lastPosts = React.useRef(null)
+    const [visibleCount, setVisibleCount] = React.useState(ARTICLES_PAR_PAGE)
 
     return (
         <Layout nodes={nodes}>
             {/* petite astuce pour passer une fonction qui rend le composant actuel au layout pour que le layout puisse passer les paramètres nécessaires au filtrage*/}
-            {(toggleTag, tags, search) => { 
+            {(toggleTag, tags, search) => {
                 const filtered = filterNodes(nodes, search, tags);
                 if (lastPosts && lastPosts.current && filtered.length !== nodes.length) {
                     lastPosts.current.scrollIntoView()
                 }
+                const visible = filtered.slice(0, visibleCount)
                 return (
                     <div>
                         <HomeHeader nodes={nodes} />
                         <h2 ref={lastPosts} id="last-posts">Dernières publications</h2>
                         <div id="cards-container">
-                            {filtered.map((el, index) => <Card postData={el} key={index} toggleTag={toggleTag} selectedTags={tags} />)}
+                            {visible.map((el, index) => <Card postData={el} key={index} toggleTag={toggleTag} selectedTags={tags} />)}
                         </div>
+                        {visibleCount < filtered.length && (
+                            <div id="load-more-container">
+                                <button
+                                    id="load-more-button"
+                                    onClick={() => setVisibleCount(visibleCount + ARTICLES_PAR_PAGE)}
+                                >
+                                    Charger plus d'articles
+                                </button>
+                            </div>
+                        )}
                     </div>
                 )
             }

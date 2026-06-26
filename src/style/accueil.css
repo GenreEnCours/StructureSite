@@ -249,6 +249,31 @@ abbr {
     margin: 3rem max(calc((100vw - var(--max-cards-width)) / 2 - 2rem), var(--min-margin)) 1.5rem max(calc((100vw - var(--max-cards-width)) / 2 - 2rem), var(--min-margin));
 }
 
+/* Bouton "Charger plus d'articles" */
+
+#load-more-container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 3rem 0;
+}
+
+#load-more-button {
+    cursor: pointer;
+    padding: 0.7rem 1.6rem;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--background-color);
+    background-color: var(--main-color);
+    border: var(--border-width) solid var(--main-color);
+    border-radius: var(--small-border-radius);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#load-more-button:hover {
+    color: var(--main-color);
+    background-color: var(--background-color);
+}
+
 @media screen and (max-width: 640px) {
     .landing-header {
         display: none;

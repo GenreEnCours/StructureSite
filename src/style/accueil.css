@@ -77,6 +77,7 @@ h1#landing-title {
 }
 
 .rotating-word-container {
+    position: relative;
     display: inline-block;
     min-width: 230px;
     text-align: center;
@@ -93,6 +94,19 @@ h1#landing-title {
 
 .fade-out {
     opacity: 0;
+}
+
+.landing-additional {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    text-align: center;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: white;
+    margin-top: 0.25rem;
 }
 
 #landing-blocks-container {

@@ -1,34 +1,53 @@
-import { Link, graphql } from "gatsby";
+import { Link, graphql, withPrefix } from "gatsby";
 import * as React from "react";
 import Layout from "../components/layout";
 import Markdown from "react-markdown";
+import { Card } from "../components/card";
 import { createSlug } from "../utils/utils";
 import "../style/article.css";
-import LogoEHNE from "../images/Logo_EHNE.png";
-import LogoMNHN from "../images/MNHN-logo.jpg";
+import "../style/cards.css";
+import siteConfig from "../../siteConfig.json";
 
-const PARTNERSHIPS = {
-  "partenariat MNHN": {
-    name: "MNHN",
-    logo: LogoMNHN,
-    url: "https://www.mnhn.fr/fr",
-  },
-  "partenariat EHNE": {
-    name: "EHNE",
-    logo: LogoEHNE,
-    url: "https://ehne.fr/fr",
-  },
-};
+// Les partenariats sont définis dans siteConfig.json (overridé au build depuis
+// le dépôt de contenu). Chaque clé correspond à un tag d'article ; `logo` est le
+// nom du fichier dans resources/LogosPartenariats (copié dans static/ au build).
+const PARTNERSHIPS = siteConfig.partnerships || {};
 
 const BlogPost = ({ data, children }) => {
   const date = data.markdownRemark.fields.date;
   const { author, title, tags, abstract, sound } =
     data.markdownRemark.frontmatter;
 
-  // Détecte les partenariats actifs selon les tags
+  // Détecte les partenariats actifs selon les tags et résout le chemin du logo
   const activePartnerships = tags
-    ? tags.filter((tag) => PARTNERSHIPS[tag]).map((tag) => PARTNERSHIPS[tag])
+    ? tags
+        .filter((tag) => PARTNERSHIPS[tag])
+        .map((tag) => ({
+          ...PARTNERSHIPS[tag],
+          logo: withPrefix(`/LogosPartenariats/${PARTNERSHIPS[tag].logo}`),
+        }))
     : [];
+
+  // Sélectionne les 4 articles ayant le plus de tags en commun avec l'article courant
+  const currentSlug = data.markdownRemark.fields.slug;
+  const currentTags = tags || [];
+  const relatedPosts = data.allMarkdownRemark.nodes
+    .filter(
+      (node) =>
+        node.fields.slug !== currentSlug &&
+        node.fields.slug !== "" &&
+        !node.fields.slug.startsWith("_")
+    )
+    .map((node) => ({
+      node,
+      sharedTags: (node.frontmatter.tags || []).filter((t) =>
+        currentTags.includes(t)
+      ).length,
+    }))
+    .filter(({ sharedTags }) => sharedTags > 0)
+    .sort((a, b) => b.sharedTags - a.sharedTags)
+    .slice(0, 4)
+    .map(({ node }) => node);
 
   return (
     <Layout>
@@ -104,7 +123,7 @@ const BlogPost = ({ data, children }) => {
               </span>
               <div className="partnership-logos">
                 {activePartnerships.map((partner, i) => (
-                  <a href={partner.url}>
+                  <a href={partner.url} target="_blank" rel="noopener noreferrer">
                     <img
                       key={i}
                       src={partner.logo}
@@ -115,6 +134,22 @@ const BlogPost = ({ data, children }) => {
                 ))}
               </div>
             </div>
+          )}
+
+          {relatedPosts.length > 0 && (
+            <section className="related-articles">
+              <h2>Genre en cours vous recommande aussi:</h2>
+              <div id="cards-container">
+                {relatedPosts.map((post) => (
+                  <Card
+                    key={post.fields.slug}
+                    postData={post}
+                    toggleTag={() => {}}
+                    selectedTags={[]}
+                  />
+                ))}
+              </div>
+            </section>
           )}
         </div>
       </main>
@@ -157,6 +192,30 @@ export const query = graphql`
         }
       }
       tableOfContents
+    }
+    allMarkdownRemark(limit: 999) {
+      nodes {
+        excerpt(pruneLength: 600)
+        frontmatter {
+          title
+          tags
+          author
+          abstract
+          uuid
+          prettyName
+        }
+        fields {
+          collection
+          prettyName
+          date(formatString: "DD MMMM, YYYY", locale: "fr")
+          slug
+          image {
+            childImageSharp {
+              gatsbyImageData(placeholder: TRACED_SVG, width: 400)
+            }
+          }
+        }
+      }
     }
   }
 `;

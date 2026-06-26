@@ -473,3 +473,18 @@ details:hover {
     position: static !important;
     height: auto !important;
 }
+
+/* Articles liés en bas de page */
+.related-articles {
+    margin-top: 3rem;
+}
+
+.related-articles h2 {
+    margin-bottom: 1.5rem;
+}
+
+@media print {
+    .related-articles {
+        display: none;
+    }
+}

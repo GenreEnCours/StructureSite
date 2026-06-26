@@ -9,7 +9,20 @@ import Planet from '../images/baniere.jpg'
 import LogoSorbonne from '../images/lettres-logo-white.svg'
 import LogoLabo from '../images/LogoLabo.png'
 
+import siteConfig from "../../siteConfig.json"
+
 import "../style/accueil.css"
+
+// Textes de la page d'accueil, surchargeables via siteConfig.json (clé "home",
+// overridée au build depuis le dépôt de contenu). Valeurs par défaut ci-dessous.
+const HOME = siteConfig.home || {}
+const HEADING_PREFIX = HOME.heading || "Outils et ressources pour"
+const ROTATING_WORDS =
+    Array.isArray(HOME.rotatingWords) && HOME.rotatingWords.length
+        ? HOME.rotatingWords
+        : ["apprendre", "bricoler ensemble", "se former", "s'informer", "transformer nos pratiques"]
+// Texte complémentaire optionnel, affiché centré en italique sous le texte rotatif
+const ADDITIONAL = HOME.additional || ""
 
 
 const Home = ({ data }) => {
@@ -41,9 +54,9 @@ const Home = ({ data }) => {
 
 const HomeHeader = ({ nodes }) => {
     const [imageClass, setImageClass] = React.useState("")
-    const [contentWord, setContentWord] = React.useState("apprendre")
+    const [contentWord, setContentWord] = React.useState(ROTATING_WORDS[0])
     const [fadeClass, setFadeClass] = React.useState("fade-in")
-    const possibleContentWords = ["bricoler ensemble", "se former", "s'informer", "transformer nos pratiques"]
+    const possibleContentWords = ROTATING_WORDS
     React.useEffect(() => {
         const interval = setInterval(() => {
             // Déclenche le fondu de sortie
@@ -74,11 +87,12 @@ const HomeHeader = ({ nodes }) => {
             {/* <img id="landing-image" src={Planet} style={{ maxWidth: "100%", margin: 0 }} className={imageClass} /> */}
             {/* <div class="gradient-overlay"></div> */}
             <h1 style={{color: "white"}}>
-                    Outils et ressources pour {' '}
+                    {HEADING_PREFIX} {' '}
                     <span className="rotating-word-container">
                         <span className={`rotating-word ${fadeClass}`}>
-                            {contentWord}
+                            {contentWord}{ADDITIONAL && "..."}
                         </span>
+                        {ADDITIONAL && <span className="landing-additional">...{ADDITIONAL}</span>}
                     </span>
                 </h1>
             <img id="landing-logo" src={LogoLabo} style={{ maxWidth: "100%", margin: 0 }} />
